@@ -10,7 +10,7 @@ outfile=sys.argv[2]
 
 
 
-tile_name=np.loadtxt('{0}.csv'.format(infile),delimiter=',',unpack=True,usecols=0,skiprows=1,
+tile_name=np.loadtxt('{0}'.format(infile),delimiter=',',unpack=True,usecols=0,skiprows=1,
                      dtype=str)
 
 print (len(tile_name))
@@ -27,7 +27,7 @@ print (new)
 
 
 lines_to_keep = []
-with open('{0}.csv'.format(outfile), "r") as f:
+with open('{0}'.format(outfile), "r") as f:
 
      for line in f.readlines():
      	for i in new:
