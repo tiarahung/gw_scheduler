@@ -12,4 +12,4 @@ python CreateSchedule.py --date 20190726 --file S190510_swope_targets_example.cs
 
 python convert_scheduler_output_to_GWoutput.py LCO_Swope_20190726_GoodSchedule.csv S190510_swope_150.txt 
 
-Note: exposure times, bands, etc, can be changed in the Targets.py file
+Note: exposure times, bands, etc, can be changed in the Telescope.py file
