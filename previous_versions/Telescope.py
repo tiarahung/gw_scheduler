@@ -204,7 +204,7 @@ class Swope(Telescope):
 
     def compute_gw_exposure(self, gw):
         exposures = {}
-        exposures.update({Constants.r_band: 180})
+        exposures.update({Constants.r_band: 60})
 
     
         
@@ -611,7 +611,7 @@ class Thacher(Telescope):
 
     def compute_gw_exposure(self, gw):
         exposures = {}
-        exposures.update({Constants.r_prime: 180})
+        exposures.update({Constants.r_prime: 300})
 
 
         
