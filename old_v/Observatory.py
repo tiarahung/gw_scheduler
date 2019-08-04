@@ -14,7 +14,7 @@ from matplotlib.pyplot import cm
 import matplotlib.dates as md
 
 class Observatory():
-    def __init__(self, name, lon, lat, elevation, horizon, telescopes, obs_date_str, utc_offset, utc_offset_name, startNow, start, end):        
+    def __init__(self, name, lon, lat, elevation, horizon, telescopes, obs_date_str, utc_offset, utc_offset_name):        
         
         self.name = name
         self.ephemeris = ephem.Observer()
@@ -32,22 +32,11 @@ class Observatory():
         self.utc_begin_night = self.ephemeris.next_setting(ephem.Sun(), use_center=True).datetime()
         self.utc_end_night = self.ephemeris.next_rising(ephem.Sun(), use_center=True).datetime()
         
-        if startNow:
-            self.utc_begin_night = datetime.utcnow()
-        elif (start is not None) and (str(start[:2]) != 'No'):
-            self.utc_begin_night = self.utc_begin_night.replace(hour=int(start[:2]))
-            self.utc_begin_night = self.utc_begin_night.replace(minute=int(start[2:]))
-            self.utc_end_night = self.ephemeris.next_rising(ephem.Sun(), use_center=True).datetime() + timedelta(-1)
-        if (end is not None) and (str(end[:2]) != 'No'):
-            self.utc_end_night = self.utc_end_night.replace(hour=int(end[:2]))
-            self.utc_end_night = self.utc_end_night.replace(minute=int(end[2:]))
-        if (self.utc_end_night<self.utc_begin_night):
-            self.utc_end_night = self.utc_end_night + timedelta(1)
-
         self.local_begin_night = pytz.utc.localize(self.utc_begin_night) \
                                  .astimezone(UTC_Offset(utc_offset,utc_offset_name))
         self.local_end_night = pytz.utc.localize(self.utc_end_night) \
                                    .astimezone(UTC_Offset(utc_offset,utc_offset_name))
+        
         timeDiff = self.local_end_night - self.local_begin_night
         self.length_of_night = int(round(timeDiff.total_seconds() / 60))
 

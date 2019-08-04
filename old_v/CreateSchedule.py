@@ -16,9 +16,6 @@ def main():
 	parser.add_argument("-d", "--date", help="YYYYMMDD formatted observation date.")
 	parser.add_argument("-ot", "--obstele", help="Comma-delimited list of <Observatory>:<Telescope>, to schedule targets.")
 	parser.add_argument("-pp", "--plot", help="Preview the plot with a modal window during command line execution.", action='store_true')
-	parser.add_argument("-a", "--now", help="Start Now -- True or False")
-	parser.add_argument("-b", "--start", help="Desired Start Time in the format of HHMM")
-	parser.add_argument("-c", "--end", help="Desired End Time in the format of HHMM")
 	args = parser.parse_args()
 
 	file_name = args.file
@@ -28,11 +25,6 @@ def main():
 	
 	obs_keys = [o.split(":")[0] for o in observatory_telescopes]
 	tele_keys = [t.split(":")[1] for t in observatory_telescopes]
-
-	startNow = args.now in ['True']
-	startTime = args.start
-	endTime = args.end
-
 
 	lco = Observatory(
 		name="LCO",
@@ -44,10 +36,7 @@ def main():
 		obs_date_str=obs_date,
 		utc_offset=lco_clt_utc_offset, # Chile observes Chile Standard Time (CLT) from 5/13/2017 - 8/12/2017 => UTC-4
 		# utc_offset=lco_clst_utc_offset, # Chile observes Chile Summer Time (CLST) from 8/13/2017 - 12/31/2017 => UTC-3
-		utc_offset_name="CLST",
-		startNow=startNow,
-		start=startTime,
-		end=endTime
+		utc_offset_name="CLST"
 	)
 
 	# ctio = Observatory(
@@ -73,10 +62,7 @@ def main():
 		obs_date_str=obs_date,
 		utc_offset=lick_pdt_utc_offset, # California observes Pacific Daylight Time (PDT) from 3/12/2017 - 11/5/2017 => UTC-7
 		# utc_offset=lick_pst_utc_offset, # California observes Pacific Standard Time (PST) from 1/1/2017 - 3/12/2017 => UTC-8
-		utc_offset_name="PST",
-		startNow=startNow,
-		start=startTime,
-		end=endTime
+		utc_offset_name="PST"
 	)
 
 	thacher = Observatory(
@@ -89,10 +75,7 @@ def main():
 		obs_date_str=obs_date,
 		utc_offset=lick_pdt_utc_offset, # California observes Pacific Daylight Time (PDT) from 3/12/2017 - 11/5/2017 => UTC-7
 		# utc_offset=lick_pst_utc_offset, # California observes Pacific Standard Time (PST) from 1/1/2017 - 3/12/2017 => UTC-8
-		utc_offset_name="PST",
-		startNow=startNow,
-		start=startTime,
-		end=endTime
+		utc_offset_name="PST"
 	)
 
 	observatories = {"LCO":lco, "Lick":lick,"Thacher":thacher }

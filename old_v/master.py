@@ -23,10 +23,7 @@ parser.add_option("-d", "--date",
 
 parser.add_option("-t", "--telescope",
                   action="store", type="string", dest="telescope",help="Options: Swope, Thacher, Nickel")
-parser.add_option("-a", "--now", help="Start Now -- True or False")
-parser.add_option("-b", "--start", help="Desired Start Time in the format of HHMM")
-parser.add_option("-c", "--end", help="Desired End Time in the format of HHMM")
-	
+
 (options, args) = parser.parse_args()
 
 
@@ -63,7 +60,7 @@ print ("Running Scheduler")
 if telescope=='Swope':
 
 
-	os.system('python CreateSchedule.py -d {0} -f {1} --obstele LCO:Swope --now {2} --start {3} --end {4}'.format(date,input_scheduler, options.now, options.start, options.end))
+	os.system('python CreateSchedule.py -d {0} -f {1} --obstele LCO:Swope'.format(date,input_scheduler))
 
 	print ("***************************")
 
@@ -74,7 +71,7 @@ if telescope=='Swope':
 
 elif telescope=='Thacher':
 
-	os.system('python CreateSchedule.py -d {0} -f {1} --obstele Thacher:Thacher --now {2} --start {3} --end {4}'.format(date,input_scheduler, options.now, options.start, options.end))
+	os.system('python CreateSchedule.py -d {0} -f {1} --obstele Thacher:Thacher'.format(date,input_scheduler))
 
 	print ("***************************")
 
@@ -86,7 +83,7 @@ elif telescope=='Thacher':
 
 elif telescope=='Nickel':
 
-	os.system('python CreateSchedule.py -d {0} -f {1} --obstele Lick:Nickel --now {2} --start {3} --end {4}'.format(date,input_scheduler, options.now, options.start, options.end))
+	os.system('python CreateSchedule.py -d {0} -f {1} --obstele Lick:Nickel'.format(date,input_scheduler))
 
 	print ("***************************")
 
@@ -95,5 +92,7 @@ elif telescope=='Nickel':
 
 
 	os.system('python convert_scheduler_output_to_GWoutput.py -s Lick_Nickel_{0}_GoodSchedule.csv -t {1} -c FC_{0}_{2}.txt'.format(date,tiles_file,telescope))
+
+print ("*******Calcuting probability******")
 
 os.system('python probs.py -f {0} --telescope {1} --date {2}'.format(tiles_file,telescope,date))
