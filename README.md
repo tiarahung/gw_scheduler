@@ -8,7 +8,9 @@ pip install ephem
 Usage: (python 3)
 
 
-python master.py --tiles_file example_tiles.txt --date 20190728 --telescope Swope --start 0400 --end 0700
+python master.py --tiles_file example_tiles.txt --date 20190802 --telescope Swope 
+
+Options include: --start HHMM --end HHMM or --now True
 
 Telescope options: Swope, Thacher, Nickel
 
