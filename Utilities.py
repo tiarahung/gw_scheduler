@@ -29,6 +29,8 @@ lco_clt_utc_offset = -4 # hours
 lick_pst_utc_offset = -8 # hours
 lick_pdt_utc_offset = -7 # hours
 
+keck_offset=-10
+
 
 # file_name assumed to be CSV with headers...
 def get_targets(file_name):

@@ -1,5 +1,5 @@
 # Constants
-airmass_threshold = 2 # relative airmass
+airmass_threshold = 2.3 # relative airmass
 round_to = 30 # seconds
 
 # Filter constants

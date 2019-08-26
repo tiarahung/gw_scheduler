@@ -1,6 +1,6 @@
 import Constants
 from Observatory import Observatory
-from Telescope import Swope, Nickel, Thacher
+from Telescope import Swope, Nickel, Thacher, Keck
 from Utilities import *
 from Target import TargetType, Target
 
@@ -95,7 +95,23 @@ def main():
 		end=endTime
 	)
 
-	observatories = {"LCO":lco, "Lick":lick,"Thacher":thacher }
+	keck = Observatory(
+		name="Keck",
+		lon="-155.4747",
+		lat="19.826",
+		elevation=4159.58,
+		horizon="-12",
+		telescopes={"Keck":Keck()},
+		obs_date_str=obs_date,
+		utc_offset=keck_offset, # California observes Pacific Daylight Time (PDT) from 3/12/2017 - 11/5/2017 => UTC-7
+		# utc_offset=lick_pst_utc_offset, # California observes Pacific Standard Time (PST) from 1/1/2017 - 3/12/2017 => UTC-8
+		utc_offset_name="Hawaii",
+		startNow=startNow,
+		start=startTime,
+		end=endTime
+	)
+
+	observatories = {"LCO":lco, "Lick":lick,"Thacher":thacher, "Keck":keck }
 	# observatories = {"LCO":lco, "Lick":lick, "CTIO":CTIO }
 
 
@@ -107,7 +123,9 @@ def main():
 	disc_dates = [t[4] for t in target_data]
 	disc_mags = [float(t[5]) for t in target_data]
 	types = [t[6] for t in target_data]
-	coords = SkyCoord(ra,dec,unit=(unit.hour, unit.deg))
+	# coords = SkyCoord(ra,dec,unit=(unit.hour, unit.deg))
+	coords = SkyCoord(ra, dec, unit=(unit.deg, unit.deg))
+
 
 	for i in range(len(observatory_telescopes)):
 		

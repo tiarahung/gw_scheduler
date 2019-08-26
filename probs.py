@@ -30,6 +30,10 @@ elif telescope=='Nickel':
 	schedule=np.loadtxt('Lick_Nickel_{0}_GoodSchedule.csv'.format(date),delimiter=',',unpack=True,usecols=0,skiprows=1,
                      dtype=str)
 
+elif telescope=='Keck':
+  schedule=np.loadtxt('Keck_Keck_{0}_GoodSchedule.csv'.format(date),delimiter=',',unpack=True,usecols=0,skiprows=1,
+                     dtype=str)
+
 # print (len(schedule))
 
 

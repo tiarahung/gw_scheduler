@@ -96,4 +96,16 @@ elif telescope=='Nickel':
 
 	os.system('python convert_scheduler_output_to_GWoutput.py -s Lick_Nickel_{0}_GoodSchedule.csv -t {1} -c FC_{0}_{2}.txt'.format(date,tiles_file,telescope))
 
+elif telescope=='Keck':
+
+	os.system('python CreateSchedule.py -d {0} -f {1} --obstele Keck:Keck --now {2} --start {3} --end {4}'.format(date,input_scheduler, options.now, options.start, options.end))
+
+	print ("***************************")
+
+
+	print ("Creating fields-center formatted file")
+
+
+	os.system('python convert_scheduler_output_to_GWoutput.py -s Keck_Keck_{0}_GoodSchedule.csv -t {1} -c FC_{0}_{2}.txt'.format(date,tiles_file,telescope))
+
 os.system('python probs.py -f {0} --telescope {1} --date {2}'.format(tiles_file,telescope,date))
