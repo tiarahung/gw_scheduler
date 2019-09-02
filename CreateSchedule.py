@@ -123,8 +123,11 @@ def main():
 	disc_dates = [t[4] for t in target_data]
 	disc_mags = [float(t[5]) for t in target_data]
 	types = [t[6] for t in target_data]
-	# coords = SkyCoord(ra,dec,unit=(unit.hour, unit.deg))
-	coords = SkyCoord(ra, dec, unit=(unit.deg, unit.deg))
+	#coords = SkyCoord(ra,dec,unit=(unit.hour, unit.deg)) #sexagesimal
+	if (":" in str(ra)):
+		coords = SkyCoord(ra,dec,unit=(unit.hour, unit.deg)) #sexagesimal
+	else:
+		coords = SkyCoord(ra,dec,unit=(unit.deg, unit.deg)) #decimal
 
 
 	for i in range(len(observatory_telescopes)):
