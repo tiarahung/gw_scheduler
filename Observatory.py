@@ -14,8 +14,8 @@ from matplotlib.pyplot import cm
 import matplotlib.dates as md
 
 class Observatory():
-    def __init__(self, name, lon, lat, elevation, horizon, telescopes, obs_date_str, utc_offset, utc_offset_name, startNow, start, end):        
-        
+    def __init__(self, name, lon, lat, elevation, horizon, telescopes, obs_date_str, utc_offset, utc_offset_name, startNow, start, end):
+
         self.name = name
         self.ephemeris = ephem.Observer()
         self.ephemeris.lon = lon
@@ -23,7 +23,7 @@ class Observatory():
         self.ephemeris.elevation = elevation
         self.ephemeris.horizon = horizon
         self.telescopes = telescopes
-        
+
         self.obs_date_string = obs_date_str
         obs_date = parse("%s 12:00" % obs_date_str) # UTC Noon
         self.obs_date = obs_date
@@ -31,7 +31,7 @@ class Observatory():
 
         self.utc_begin_night = self.ephemeris.next_setting(ephem.Sun(), use_center=True).datetime()
         self.utc_end_night = self.ephemeris.next_rising(ephem.Sun(), use_center=True).datetime()
-        
+
         if startNow:
             self.utc_begin_night = datetime.utcnow()
         elif (start is not None) and (str(start[:2]) != 'No'):
@@ -53,13 +53,13 @@ class Observatory():
 
         self.utc_time_array = np.asarray([self.utc_begin_night + timedelta(minutes=minute) \
                                           for minute in range(self.length_of_night)])
-        
+
         self.local_time_array = np.asarray([self.local_begin_night + timedelta(minutes=minute) \
                                       for minute in range(self.length_of_night)])
-    
+
         self.sidereal_string_array = []
         self.sidereal_radian_array = []
-        
+
         for utc_time in self.utc_time_array:
             self.ephemeris.date = utc_time
             st = self.ephemeris.sidereal_time()
@@ -70,7 +70,7 @@ class Observatory():
 
             self.sidereal_string_array.append(st_string)
             self.sidereal_radian_array.append(st)
-        
+
         print("%s - %s deg Twilight Ends: %s" % (self.name, np.abs(self.ephemeris.horizon), self.local_begin_night))
         print("%s - %s deg Dawn Begins: %s" % (self.name, np.abs(self.ephemeris.horizon), self.local_end_night))
 
@@ -81,7 +81,7 @@ class Observatory():
         return contiguous
 
     def schedule_targets(self, telescope_name, preview_plot=False):
-        
+
         # Update internal Target list with priorities and exposures
         telescope = self.telescopes[telescope_name]
         telescope.compute_exposures()
@@ -89,9 +89,12 @@ class Observatory():
         targets = telescope.get_targets()
 
         # Sorted by priority and closeness to discovery
-        targets.sort(key = operator.attrgetter('net_priority')) # 'TotalGoodAirMass'
+        # TH testing
+        targets.sort(key = operator.attrgetter('priority'), reverse=False)
+
+        #targets.sort(key = operator.attrgetter('net_priority')) # 'TotalGoodAirMass'
         length_of_night = len(self.utc_time_array) # In minutes
-        
+
         for tgt in targets:
             print("%s: %s; %s min; Pri: %s" % (tgt.name, tgt.exposures, tgt.total_minutes, tgt.priority))
 
@@ -118,8 +121,9 @@ class Observatory():
                 best_indices = []
                 largest_airmass = 1e+6
 
-                # We are crawling forward along the array, grabbing segments of length "total_min", 
+                # We are crawling forward along the array, grabbing segments of length "total_min",
                 # and incrementing in starting index
+
                 for i in range(n):
                     current_start += 1 # start index
                     end = (current_start + tgt.total_minutes) # how many
@@ -136,14 +140,22 @@ class Observatory():
 
                         # Check if this associated integrated airmass corresponds to a range of time that's contiguous
                         contiguous = self.is_contiguous(candidate_indices)
+                        # TH modification
 
+                        if (integrated_am <= (Constants.airmass_threshold * tgt.total_minutes)) and contiguous:
+                            largest_airmass = integrated_am
+                            best_indices = candidate_indices
+                            break
+
+
+                        """
                         # if this is the smallest, and is for a contiguous span of time, it's the new one to beat
                         if integrated_am < largest_airmass and contiguous:
                             largest_airmass = integrated_am
                             best_indices = candidate_indices
-                            
+                        """
                 if largest_airmass < 1e+6:
-                    
+
                     found = True
                     time_slots[best_indices] = 1 # reserve these slots
 
@@ -157,10 +169,10 @@ class Observatory():
                     print("Can't fit %s. Skipping!" % tgt.name)
                     bad_o.append(tgt)
                     break
-        
+
         self.plot_results(o, telescope_name, preview_plot)
         telescope.write_schedule(self.name, self.obs_date ,o)
-        
+
     def plot_results(self, good_targets, telescope_name, preview_plot):
         good_targets.sort(key = operator.attrgetter('starting_index'))
         length_of_night = len(self.utc_time_array) # in minutes
@@ -180,7 +192,7 @@ class Observatory():
         ax1.set_xlabel("Local Time")
         ax1.grid(True)
         ax1.set_axisbelow(True)
-        
+
         ax2.plot(self.utc_time_array, np.zeros(length_of_night))
         ax2.set_xlabel("UTC")
         ax2.get_xaxis().set_major_formatter(md.DateFormatter('%H:%M'))
@@ -215,7 +227,7 @@ class Observatory():
         percent1 = 100*float(total_tgts)/float(self.length_of_night)
         fig.suptitle("%s %s: %s\nOpen Shutter Time: %0.2f%%" % \
              (self.name, telescope_name, self.obs_date.date(),percent1),y=1.10)
-    
+
         fig_to_save = "%s_%s_%s_Plot.png" % (self.name, telescope_name, self.obs_date_string)
         fig.savefig(fig_to_save,bbox_inches='tight',dpi=300)
 

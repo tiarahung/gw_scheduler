@@ -26,10 +26,8 @@ parser.add_option("-t", "--telescope",
 parser.add_option("-a", "--now", help="Start Now -- True or False")
 parser.add_option("-b", "--start", help="Desired Start Time in the format of HHMM")
 parser.add_option("-c", "--end", help="Desired End Time in the format of HHMM")
-	
+
 (options, args) = parser.parse_args()
-
-
 
 tiles_file=options.tiles_file
 
@@ -40,7 +38,6 @@ telescope=options.telescope
 
 input_scheduler='{0}_{1}_targets.csv'.format(date,telescope)
 
-telescope=options.telescope
 # output_scheduler=options.output_scheduler
 
 # fc_file=options.fc_file
