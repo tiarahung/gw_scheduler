@@ -3,7 +3,7 @@ from Target import TargetType, Target
 
 from abc import ABCMeta, abstractmethod, abstractproperty
 import numpy as np
-import csv
+import csv, os
 
 # Abstract class -- not meant to be directly instantiated. Inherit from this class to implement
 # another telescope. See Swope and Nickel implementations...
@@ -148,9 +148,9 @@ class Swope(Telescope):
 
         return filter_row
 
-    def write_schedule(self, observatory_name, obs_date, targets):
+    def write_schedule(self, observatory_name, obs_date, targets, outdir='.'):
 
-        file_to_write = "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d'))
+        file_to_write = os.path.join(outdir, "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d')))
         with open(file_to_write,"w") as csvoutput:
             writer = csv.writer(csvoutput, lineterminator="\n")
 
@@ -291,8 +291,8 @@ class Nickel(Telescope):
 
         return filter_row
 
-    def write_schedule(self, observatory_name, obs_date, targets):
-        file_to_write = "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d'))
+    def write_schedule(self, observatory_name, obs_date, targets, outdir='.'):
+        file_to_write = os.path.join(outdir, "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d')))
         with open(file_to_write,"w") as csvoutput:
             writer = csv.writer(csvoutput, lineterminator="\n")
 
@@ -421,8 +421,8 @@ class Thacher(Telescope):
 
         return filter_row
 
-    def write_schedule(self, observatory_name, obs_date, targets):
-        file_to_write = "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d'))
+    def write_schedule(self, observatory_name, obs_date, targets, outdir='.'):
+        file_to_write = os.path.join(outdir, "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d')))
         with open(file_to_write,"w") as csvoutput:
             writer = csv.writer(csvoutput, lineterminator="\n")
 
@@ -552,8 +552,8 @@ class Keck(Telescope):
 
         return filter_row
 
-    def write_schedule(self, observatory_name, obs_date, targets):
-        file_to_write = "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d'))
+    def write_schedule(self, observatory_name, obs_date, targets, outdir='.'):
+        file_to_write = os.path.join(outdir, "%s_%s_%s_GoodSchedule.csv" % (observatory_name, self.name, obs_date.strftime('%Y%m%d')))
         with open(file_to_write,"w") as csvoutput:
             writer = csv.writer(csvoutput, lineterminator="\n")
 

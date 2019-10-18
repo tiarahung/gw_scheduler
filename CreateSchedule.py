@@ -3,14 +3,14 @@ from Observatory import Observatory
 from Telescope import Swope, Nickel, Thacher, Keck
 from Utilities import *
 from Target import TargetType, Target
-
+import os
 from dateutil.parser import parse
 import argparse
 from astropy.coordinates import SkyCoord
 from astropy import units as unit
 
 def main():
-
+	print(os.getcwd())
 	parser = argparse.ArgumentParser()
 	parser.add_argument("-f", "--file", help="CSV file with targets to schedule.")
 	parser.add_argument("-d", "--date", help="YYYYMMDD formatted observation date.")
@@ -21,8 +21,12 @@ def main():
 	parser.add_argument("-c", "--end", help="Desired End Time in the format of HHMM")
 	parser.add_argument("-A", "--asap", action='store_true', default=False)
 	parser.add_argument("-e", "--exp", help="exposure time", type=int, default=120)
+	parser.add_argument("-o", "--outdir", action="store", type=str, dest="outdir")
+
 	args = parser.parse_args()
 
+
+	outdir = args.outdir
 	file_name = args.file
 	obs_date = args.date
 	observatory_telescopes = args.obstele.split(",")
@@ -170,7 +174,7 @@ def main():
 		print("First %s target: %s" % (tele_keys[i], targets[0].name))
 		print("Last %s target: %s" % (tele_keys[i], targets[-1].name))
 
-		obs.schedule_targets(tele_keys[i], preview_plot, asap)
+		obs.schedule_targets(tele_keys[i], preview_plot, asap, outdir)
 
 	if preview_plot:
 		exit = input("\n\nENTER to exit")

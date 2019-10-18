@@ -31,7 +31,7 @@ tile_name=np.loadtxt('{0}'.format(infile),delimiter=',',unpack=True,usecols=0,sk
 
 # print (len(tile_name))
 
-scheduled_tiles=[]
+scheduled_tiles = []
 for i in tile_name:
     if i != "":
         # print (i

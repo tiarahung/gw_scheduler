@@ -8,7 +8,7 @@ from datetime import tzinfo, timedelta, datetime
 import pytz as pytz
 import numpy as np
 import operator
-import copy
+import copy, os
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import cm
 import matplotlib.dates as md
@@ -81,7 +81,7 @@ class Observatory():
         return contiguous
 
 
-    def schedule_targets(self, telescope_name, preview_plot=False, asap=False):
+    def schedule_targets(self, telescope_name, preview_plot=False, asap=False, outdir='.'):
 
         # Update internal Target list with priorities and exposures
         telescope = self.telescopes[telescope_name]
@@ -205,11 +205,11 @@ class Observatory():
                         bad_o.append(tgt)
                         break
 
-        self.plot_results(o, telescope_name, preview_plot)
+        self.plot_results(o, telescope_name, preview_plot, outdir)
 
-        telescope.write_schedule(self.name, self.obs_date ,o)
+        telescope.write_schedule(self.name, self.obs_date , o, outdir)
 
-    def plot_results(self, good_targets, telescope_name, preview_plot):
+    def plot_results(self, good_targets, telescope_name, preview_plot, outdir='.'):
         good_targets.sort(key = operator.attrgetter('starting_index'))
         length_of_night = len(self.utc_time_array) # in minutes
 
@@ -264,7 +264,7 @@ class Observatory():
         fig.suptitle("%s %s: %s\nOpen Shutter Time: %0.2f%%" % \
              (self.name, telescope_name, self.obs_date.date(),percent1),y=1.10)
 
-        fig_to_save = "%s_%s_%s_Plot.png" % (self.name, telescope_name, self.obs_date_string)
+        fig_to_save = os.path.join(outdir, "%s_%s_%s_Plot.png" % (self.name, telescope_name, self.obs_date_string))
         fig.savefig(fig_to_save,bbox_inches='tight',dpi=300)
 
         if preview_plot:

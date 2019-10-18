@@ -1,69 +1,41 @@
 import numpy as np
 from astropy.io import ascii
 
-from optparse import OptionParser
-parser = OptionParser()
+import argparse
+parser = argparse.ArgumentParser()
 
-parser.add_option("-f", "--tiles_file",
-                  action="store", type="string", dest="tiles_file")
+parser.add_argument("-f", "--tiles_file",
+                  action="store", type=str, dest="tiles_file")
 
+parser.add_argument("-s", "--schedule",
+                  action="store", type=str, dest="schedule")
 
-parser.add_option("-d", "--date",
-                  action="store", type="string", dest="date")
-
-parser.add_option("-t", "--telescope",
-                  action="store", type="string", dest="telescope",help="Options: Swope, Thacher, Nickel")
-
-(options, args) = parser.parse_args()
-
-date = options.date
-telescope = options.telescope
-
-if telescope == 'Swope':
-	schedule=np.loadtxt('LCO_Swope_{0}_GoodSchedule.csv'.format(date),delimiter=',',unpack=True,usecols=0,skiprows=1,
-                     dtype=str)
-elif telescope == 'Thacher':
-	schedule=np.loadtxt('Thacher_Thacher_{0}_GoodSchedule.csv'.format(date),delimiter=',',unpack=True,usecols=0,skiprows=1,
-                     dtype=str)
-
-elif telescope == 'Nickel':
-	schedule=np.loadtxt('Lick_Nickel_{0}_GoodSchedule.csv'.format(date),delimiter=',',unpack=True,usecols=0,skiprows=1,
-                     dtype=str)
-
-elif telescope == 'Keck':
-  schedule=np.loadtxt('Keck_Keck_{0}_GoodSchedule.csv'.format(date), delimiter=',', unpack=True, usecols=0, skiprows=1,
-                     dtype=str)
-
-# print (len(schedule))
+args = parser.parse_args()
 
 
+schedule_file = args.schedule
 
+schedule = np.loadtxt(schedule_file, delimiter=',', unpack=True, usecols=0, skiprows=1, dtype=str)
 scheduled_tiles = []
 for i in schedule:
     if i != "":
         scheduled_tiles.append(i)
 
+scheduled_tiles = np.array(scheduled_tiles)
 print ("Number of tiles scheduled: ",len(scheduled_tiles))
 
 # infile=options.tiles_file
 
-tiles_file=ascii.read('{0}'.format(options.tiles_file),data_start=0, delimiter=',')
+tiles_file = np.loadtxt(args.tiles_file, delimiter=',', skiprows=1, dtype=str)
+coincidence, ind1, ind2 = np.intersect1d(scheduled_tiles, tiles_file[:,0], return_indices=True)
 
 
-coincidence = []
-ps = []
-for name in scheduled_tiles:
-    for j,val in enumerate(tiles_file['FieldName']):
-        if name == val:
-            # print (name)
-#             print tiles_file['Priority'][j]
-            coincidence.append(name)
-            ps.append(tiles_file['Priority'][j])
+
 
 print ("Coincidence", len(coincidence), "(must be equal to number above): it's # overlapping tiles between original tiles file and scheduled tiles)")
 # print (ps)
-print("Sum of Priorities: ", np.sum(ps))
+print("Sum of Priorities: ", sum(tiles_file[ind2, 6].astype(float)))
 
-print("Probability: ", 100*np.sum(ps))
+#print("Probability: ", 100*np.sum(ps))
 
 
