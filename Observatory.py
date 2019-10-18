@@ -264,8 +264,8 @@ class Observatory():
         fig.suptitle("%s %s: %s\nOpen Shutter Time: %0.2f%%" % \
              (self.name, telescope_name, self.obs_date.date(),percent1),y=1.10)
 
-        fig_to_save = os.path.join(outdir, "%s_%s_%s_Plot.png" % (self.name, telescope_name, self.obs_date_string))
-        fig.savefig(fig_to_save,bbox_inches='tight',dpi=300)
+        fig_to_save = os.path.join(outdir, "%s_%s_%s_Plot.eps" % (self.name, telescope_name, self.obs_date_string))
+        fig.savefig(fig_to_save,bbox_inches='tight', dpi=300)
 
         if preview_plot:
             plt.show(block=False)
