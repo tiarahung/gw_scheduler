@@ -136,7 +136,7 @@ class Observatory():
             found = False
 
             while not found:
-                if tgt.total_observable_min <= 0:
+                if tgt.total_observable_min <= tgt.total_minutes:
                     print("%s is unobservable!" % tgt.name)
                     break
 

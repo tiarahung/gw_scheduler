@@ -27,7 +27,7 @@ parser.add_argument("-a", "--now", help="Start Now -- True or False")
 parser.add_argument("-b", "--start", help="Desired Start Time in the format of HHMM")
 parser.add_argument("-c", "--end", help="Desired End Time in the format of HHMM")
 parser.add_argument("-A", "--asap", action='store_true', default=False)
-
+parser.add_argument("-e", "--exp", help="exposure time", type=int, default=120)
 
 
 args = parser.parse_args()
@@ -63,7 +63,7 @@ print ("Running Scheduler")
 obs = {'Swope': 'LCO', 'Thacher': 'Thacher', 'Nickel': 'Lick', 'Keck': 'Keck'}
 
 
-create_schedule_cmd = 'python CreateSchedule.py -d {0} -f {1} --obstele {2}:{3} --now {4} --start {5} --end {6}'.format(date,input_scheduler, obs[telescope], telescope, args.now, args.start, args.end)
+create_schedule_cmd = 'python CreateSchedule.py -d {0} -f {1} --obstele {2}:{3} --now {4} --start {5} --end {6} --exp {7}'.format(date,input_scheduler, obs[telescope], telescope, args.now, args.start, args.end, args.exp)
 if args.asap:
 	create_schedule_cmd += " -A"
 

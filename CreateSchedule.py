@@ -20,6 +20,7 @@ def main():
 	parser.add_argument("-b", "--start", help="Desired Start Time in the format of HHMM")
 	parser.add_argument("-c", "--end", help="Desired End Time in the format of HHMM")
 	parser.add_argument("-A", "--asap", action='store_true', default=False)
+	parser.add_argument("-e", "--exp", help="exposure time", type=int, default=120)
 	args = parser.parse_args()
 
 	file_name = args.file
@@ -142,16 +143,7 @@ def main():
 			target_type = None
 			disc_date = None
 
-			if types[j] == "STD":
-				target_type = TargetType.Standard
-				disc_date = None
-			elif types[j] == "TMP":
-				target_type = TargetType.Template
-				disc_date = parse(disc_dates[j])
-			elif types[j] == "SN":
-				target_type = TargetType.Supernova
-				disc_date = parse(disc_dates[j])
-			elif types[j] == "GW":
+			if types[j] == "GW":
 				target_type = TargetType.GW
 				disc_date = parse(disc_dates[j])
 			else:
@@ -167,7 +159,8 @@ def main():
 					sidereal_radian_array=obs.sidereal_radian_array,
 					disc_date=disc_date,
 					apparent_mag=disc_mags[j],
-					obs_date=obs.obs_date
+					obs_date=obs.obs_date,
+					exp=args.exp,
 				)
 			)
 
